@@ -54,34 +54,31 @@ const ShoppingApp = () => {
     return row.getValue(id).toLowerCase().startsWith(filterValue.toLowerCase())
   }
 
-  const columns = useMemo(
-    () => [
-      {
-        id: 'all',
-        columns: [
-          {
-            id: 'id',
-            header: 'ID',
-            accessorKey: 'id',
-            size: 50,
-          },
-          {
-            accessorKey: 'name', 
-            enableClickToCopy: true,
-            header: 'Name',
-            size: 150,
-          },
-          {
-            accessorKey: 'created_by', 
-            enableClickToCopy: true,
-            header: 'Created By',
-            size: 150,
-          },
-        ],
-      },
-    ],
-    [],
-  );
+  const columns = useMemo(() => [
+    {
+      id: 'all',
+      columns: [
+        {
+          id: 'id',
+          header: 'ID',
+          accessorKey: 'id',
+          size: 50,
+        },
+        {
+          accessorKey: 'name',
+          enableClickToCopy: true,
+          header: 'Name',
+          size: 150,
+        },
+        {
+          accessorKey: 'created_by',
+          enableClickToCopy: true,
+          header: 'Created By',
+          size: 150,
+        },
+      ],
+    },
+  ], []);
 
   return (
     <>
