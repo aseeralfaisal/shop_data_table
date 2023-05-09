@@ -50,8 +50,6 @@ const ShoppingApp = () => {
     getItems()
   }, [])
 
-
-
   const globalSearch = (row, id, filterValue) => {
     return row.getValue(id).toLowerCase().startsWith(filterValue.toLowerCase())
   }
@@ -59,23 +57,22 @@ const ShoppingApp = () => {
   const columns = useMemo(
     () => [
       {
-        id: 'all', //id used to define `group` column
+        id: 'all',
         columns: [
           {
-            accessorFn: (row) => `${row.id}`, //accessorFn used to join multiple data into a single cell
-            id: 'id', //id is still required when using accessorFn instead of accessorKey
+            id: 'id',
             header: 'ID',
             accessorKey: 'id',
             size: 50,
           },
           {
-            accessorKey: 'name', //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
+            accessorKey: 'name', 
             enableClickToCopy: true,
             header: 'Name',
             size: 150,
           },
           {
-            accessorKey: 'created_by', //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
+            accessorKey: 'created_by', 
             enableClickToCopy: true,
             header: 'Created By',
             size: 150,
