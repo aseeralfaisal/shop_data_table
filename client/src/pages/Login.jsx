@@ -6,6 +6,8 @@ import { Password, Person, ShoppingCart } from '@mui/icons-material'
 import { Button, Container, Typography } from '@mui/material'
 import IconTextField from '../components/IconTextField'
 
+const baseURI = import.meta.env.VITE_BASE_URI
+
 const HeaderComponent = () => (
     <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <ShoppingCart sx={{ fontSize: 60, color: "#333" }} />
@@ -21,14 +23,14 @@ const Login = () => {
 
     const loginAction = async () => {
         try {
-            const loginUser = await axios.post('http://localhost:8000/loginuser', {
+            const loginUser = await axios.post(`${baseURI}/loginuser`, {
                 email: emailValue,
                 password: passValue
             })
             if (loginUser.data) {
                 const { accessToken, refreshToken } = loginUser.data;
-                Cookies.set('accessToken', accessToken);
-                Cookies.set('refreshToken', refreshToken);
+                Cookies.set('accessToken', accessToken, { secure: true });
+                Cookies.set('refreshToken', refreshToken, { secure: true });
                 navigate('/home')
             }
         } catch (error) {

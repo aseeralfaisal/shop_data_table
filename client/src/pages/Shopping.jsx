@@ -6,34 +6,51 @@ import { ShoppingCart, Tune } from '@mui/icons-material';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
+const baseURI = import.meta.env.VITE_BASE_URI
 
 const ShoppingApp = () => {
   const [products, setProducts] = useState([])
 
-  const token = Cookies.get('accessToken')
-
   useEffect(() => {
+    const refreshAccessToken = async () => {
+      try {
+        const token = Cookies.get('refreshToken')
+        console.log({ refreshToken: token })
+        const response = await axios.post(`${baseURI}/refresh-token`, {
+          token
+        })
+        const newAccessToken = response.data.accessToken
+        Cookies.set('accessToken', newAccessToken)
+      } catch (error) {
+        console.log('Failed to refresh access token', error)
+      }
+    }
+
     const getItems = async () => {
       try {
-        const items = await axios.get('http://localhost:8000/item', {
+        const accessToken = Cookies.get('accessToken')
+        const response = await axios.get(`${baseURI}/item`, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
           }
         })
-        console.log(items)
-        setProducts(items.data)
-      } catch (error) {
-        console.log(error)
+        setProducts(response.data)
+      } catch ({ response }) {
+        if (response.status === 403) {
+          await refreshAccessToken()
+          const newAccessToken = Cookies.get('accessToken')
+          newAccessToken && await getItems()
+        } else {
+          console.log('API call failed', response)
+        }
       }
     }
+
     getItems()
-    return () => {
-      getItems()
-    }
   }, [])
 
-  console.log(products)
+
 
   const globalSearch = (row, id, filterValue) => {
     return row.getValue(id).toLowerCase().startsWith(filterValue.toLowerCase())
