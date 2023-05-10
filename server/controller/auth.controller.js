@@ -4,8 +4,8 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET
 
 const generateAccessToken = (email) =>
-    jwt.sign({ email }, accessTokenSecret, { expiresIn: '15s' })
-const generateRefreshToken = (email) => jwt.sign(email, refreshTokenSecret)
+    jwt.sign({ email }, accessTokenSecret, { expiresIn: '30m' })
+const generateRefreshToken = (email) => jwt.sign(email, refreshTokenSecret, { expiresIn: '1d' })
 
 const handleRefreshToken = (req, res) => {
     const token = req.body.token;
