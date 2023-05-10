@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000
 const app = express()
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({ credentials: true }))
 app.use(cookieParser())
 
 const dbConnect = async () => {
@@ -25,6 +25,6 @@ const dbConnect = async () => {
 }
 dbConnect()
 
-app.use('/', routes)
-app.post('/refresh-token', auth.handleRefreshToken)
+app.use('/api', routes)
+app.post('/api/refresh-token', auth.handleRefreshToken)
 app.listen(PORT, () => console.log(`Listening to PORT:${PORT} 🚀🔥`))

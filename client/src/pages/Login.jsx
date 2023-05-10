@@ -1,13 +1,11 @@
 import { useState } from 'react'
-import axios from 'axios'
-import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
-import { Button, Grid, CssBaseline, Link, Paper } from '@mui/material'
+import { Button, Grid, Link, Paper, Box } from '@mui/material'
 import useStyles from "./login.styles";
 import IconTextField from '../components/IconTextField'
 import HeaderComponent from '../components/Header'
-
-const baseURI = import.meta.env.VITE_BASE_URI
+import Cookies from 'js-cookie'
+import Api from '../services/interceptor'
 
 const Login = () => {
     const classes = useStyles()
@@ -20,16 +18,14 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const loginUser = await axios.post(`${baseURI}/loginuser`, {
+            const response = await Api.post(`/loginuser`, {
                 email: emailValue,
                 password: passValue
             })
-            if (loginUser.data) {
-                const { accessToken, refreshToken } = loginUser.data;
-                Cookies.set('accessToken', accessToken, { secure: true });
-                Cookies.set('refreshToken', refreshToken, { secure: true });
-                navigate('/home')
-            }
+            const { accessToken, refreshToken } = response.data
+            Cookies.set('accessToken', accessToken)
+            Cookies.set('refreshToken', refreshToken)
+            navigate('/home')
         } catch (error) {
             console.error(error);
         }
@@ -38,7 +34,6 @@ const Login = () => {
     return (
         <>
             <Grid container component="main" className={classes.root}>
-                <CssBaseline />
                 <Grid
                     className={classes.size}
                     item
@@ -49,7 +44,7 @@ const Login = () => {
                     elevation={1}
                     square
                 >
-                    <div className={classes.paper}>
+                    <Box className={classes.paper}>
                         <HeaderComponent />
                         <form className={classes.form} noValidate>
                             <IconTextField label="Email" type='email' value={emailValue}
@@ -70,7 +65,6 @@ const Login = () => {
                             >
                                 Sign In
                             </Button>
-
                             <Grid container>
                                 <Grid item>
                                     <Link href="#" variant="body2" color={"#555"}>
@@ -79,7 +73,7 @@ const Login = () => {
                                 </Grid>
                             </Grid>
                         </form>
-                    </div>
+                    </Box>
                 </Grid>
             </Grid>
         </>

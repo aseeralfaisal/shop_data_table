@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(6),
     },
     form: {
-        width: "100%",
         marginTop: theme.spacing(3),
         display: 'flex',
         flexDirection: 'column',

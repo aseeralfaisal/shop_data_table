@@ -1,18 +1,20 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 
 const authenticateToken = async (req, res, next) => {
     try {
         const authHeader = req.headers['authorization']
         const token = authHeader && authHeader.split(' ')[1]
+        console.log("AUTH TOKEN", token)
         if (token) {
             jwt.verify(token, accessTokenSecret)
             next()
-        } else {
-            return res.sendStatus(401)
         }
     } catch (error) {
-        res.sendStatus(403)
+        if (error.name === 'TokenExpiredError') {
+            return res.sendStatus(401)
+        }
+        return res.sendStatus(403)
     }
 }
 

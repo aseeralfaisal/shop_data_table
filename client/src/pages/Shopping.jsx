@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react'
 import '../App.css'
-import MaterialReactTable from 'material-react-table';
-import { Box} from '@mui/material';
-import * as colors from "@mui/material/colors"
-import Cookies from 'js-cookie';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import HeaderComponent from '../components/Header';
+import MaterialReactTable from 'material-react-table'
+import { Box } from '@mui/material'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import HeaderComponent from '../components/Header'
+import Api from '../services/interceptor'
 
 const baseURI = import.meta.env.VITE_BASE_URI
 const pageSize = 10
@@ -16,36 +15,16 @@ const ShoppingApp = () => {
   const [products, setProducts] = useState([])
 
   useEffect(() => {
-    const refreshAccessToken = async () => {
-      try {
-        const token = Cookies.get('refreshToken')
-        console.log({ refreshToken: token })
-        const response = await axios.post(`${baseURI}/refresh-token`, {
-          token
-        })
-        const newAccessToken = response.data.accessToken
-        console.log({ newAccessToken })
-        Cookies.set('accessToken', newAccessToken)
-      } catch (error) {
-        console.log('Failed to refresh access token', error)
-      }
-    }
-
     const getItems = async () => {
       try {
-        const accessToken = Cookies.get('accessToken')
-        const response = await axios.get(`${baseURI}/item`, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          }
-        })
+        const response = await Api.get(`/item`)
         setProducts(response.data)
-      } catch ({ response }) {
-        if (response.status === 401) {
-          await refreshAccessToken()
-        }
-        navigate('/')
+      } catch (error) {
+        // if (response.status === 401) {
+        //   await refreshAccessToken()
+        // }
+        // navigate('/')
+        console.log(error)
       }
     }
 
