@@ -86,7 +86,7 @@ export default function ModalForm({ isModalOpen, setIsModalOpen, itemView, dataU
                                     </div>
                                 }
                             </Typography>
-                            <ButtonGroup fullWidth sx={{ display: 'flex', gap: 0.3 }}>
+                            <ButtonGroup fullWidth sx={{ display: 'flex', gap: 0.3, mt: 3 }}>
                                 <Button size='medium'
                                     type='submit'
                                     onClick={(ev) => handleSubmission(ev)}
