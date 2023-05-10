@@ -51,7 +51,7 @@ const deleteUser = async (req, res) => {
     if (userFound) {
         userFound.deleteOne()
     }
-    res.send(userFound)
+    res.json(userFound)
 }
 
 module.exports = {

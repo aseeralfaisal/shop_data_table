@@ -7,13 +7,14 @@ const router = express.Router()
 
 router.post('/createuser', user.createUser)
 router.post('/loginuser', user.loginUser)
-router.post('/deleteuser', user.deleteUser)
+router.post('/deleteuser', authenticateToken, user.deleteUser)
 router.post('/createadmin', admin.createAdmin)
 router.post('/loginadmin', admin.loginAdmin)
 
 router.get('/', authenticateToken, (_, res) => res.status(200).send('Hello World'))
 router.get('/getusers', authenticateToken, user.getUsers)
 router.get('/item', authenticateToken, item.getItem)
+router.post('/deleteitem', authenticateToken, item.deleteItem)
 router.post('/createitem', item.createItem)
 
 module.exports = router

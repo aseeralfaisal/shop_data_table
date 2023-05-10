@@ -5,16 +5,27 @@ import AccountMenu from '../components/Menu'
 import { ButtonGroup, Button, ListItemIcon, MenuItem, colors } from '@mui/material'
 import { Add, AddCircle, ChangeCircle, DeleteSweep, EditNote } from '@mui/icons-material'
 import ModalForm from './ModalForm'
+import Api from '../services/Api.interceptor'
 
 
 const DataTable = (props) => {
-    const { columns, items, pageSize = 10, isAdmin = false, dataUpdated, setDataUpdated,itemView, setItemView } = props
+    const { columns, items, pageSize = 10, isAdmin = false, dataUpdated, setDataUpdated, itemView, setItemView } = props
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const changeAdminView = () => setItemView(!itemView)
 
     const globalSearch = (row, id, filterValue) => {
         return row.getValue(id).toLowerCase().startsWith(filterValue.toLowerCase())
+    }
+
+    const deleteUser = async (name) => {
+        try {
+            const res = await Api.post('/deleteuser', { name })
+            console.log(res.data)
+            setDataUpdated(!dataUpdated)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -27,6 +38,8 @@ const DataTable = (props) => {
                 setDataUpdated={setDataUpdated}
             />
             <MaterialReactTable
+                enableRowNumbers
+                rowNumberMode='original'
                 columns={columns}
                 data={items}
                 enableColumnFilterModes
@@ -67,23 +80,23 @@ const DataTable = (props) => {
                 initialState={{
                     showColumnFilters: true,
                     pagination: { pageSize: pageSize },
-                    columnOrder: isAdmin ?
-                        [
-                            'mrt-row-select',
-                            'id',
-                            'name',
-                            'created_by',
-                            'mrt-row-actions',
-                        ]
-                        :
-                        [
-                            'mrt-row-select',
-                            'id',
-                            'name',
-                            'created_by',
-                        ],
+                    // columnOrder: isAdmin ?
+                    //     [
+                    //         'mrt-row-select',
+                    //         'id',
+                    //         'name',
+                    //         'created_by',
+                    //         'mrt-row-actions',
+                    //     ]
+                    //     :
+                    //     [
+                    //         'mrt-row-number',
+                    //         'id',
+                    //         'name',
+                    //         'created_by',
+                    //     ],
                 }}
-                renderRowActionMenuItems={() => {
+                renderRowActionMenuItems={(val) => {
                     return (
                         <div>
                             {isAdmin ?
@@ -94,7 +107,7 @@ const DataTable = (props) => {
                                         </ListItemIcon>
                                         Edit
                                     </MenuItem>
-                                    <MenuItem>
+                                    <MenuItem onClick={() => deleteUser(val.row.original.name)}>
                                         <ListItemIcon>
                                             <DeleteSweep fontSize="small" />
                                         </ListItemIcon>

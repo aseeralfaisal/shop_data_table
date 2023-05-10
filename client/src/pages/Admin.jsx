@@ -32,12 +32,6 @@ const Admin = () => {
 
     const columns = useMemo(() => [
         {
-            id: 'id',
-            header: 'ID',
-            accessorKey: 'id',
-            size: 50,
-        },
-        {
             accessorKey: 'name',
             enableClickToCopy: true,
             header: 'Name',
