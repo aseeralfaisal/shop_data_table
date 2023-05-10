@@ -1,12 +1,12 @@
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const bcrypt = require("bcrypt")
-const admin = require('../model/adminuser.model')
+const admin = require('../model/admin.model')
 const auth = require('./auth.controller')
 
 const saltRounds = process.env.SALT_ROUND
 
-const createUser = async (req, res) => {
+const createAdmin = async (req, res) => {
     try {
         const { email, name, password } = req.body
         const salt = await bcrypt.genSalt(+saltRounds)
@@ -22,7 +22,7 @@ const createUser = async (req, res) => {
     }
 }
 
-const loginUser = async (req, res) => {
+const loginAdmin = async (req, res) => {
     try {
         const { email, password } = req.body
         const userFound = await admin.findOne({ email })
@@ -34,13 +34,13 @@ const loginUser = async (req, res) => {
         }
         const accessToken = auth.generateAccessToken(email)
         const refreshToken = auth.generateRefreshToken(email)
-        res.json({ accessToken, refreshToken })
+        res.json({ accessToken, refreshToken, username: userFound.name })
     } catch (error) {
         console.log(error)
     }
 }
 
 module.exports = {
-    createUser,
-    loginUser,
+    createAdmin,
+    loginAdmin,
 }
