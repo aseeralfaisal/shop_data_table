@@ -5,7 +5,7 @@ import useStyles from "./login.styles";
 import IconTextField from '../components/IconTextField'
 import HeaderComponent from '../components/Header'
 import Cookies from 'js-cookie'
-import Api from '../services/interceptor'
+import Api from '../services/Api.interceptor'
 
 const Login = () => {
     const classes = useStyles()

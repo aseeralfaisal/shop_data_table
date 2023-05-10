@@ -4,7 +4,8 @@ import MaterialReactTable from 'material-react-table'
 import { Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import HeaderComponent from '../components/Header'
-import Api from '../services/interceptor'
+import Api from '../services/Api.interceptor'
+import AccountMenu from '../components/Menu'
 
 const pageSize = 10
 
@@ -16,7 +17,6 @@ const ShoppingApp = () => {
     const getItems = async () => {
       try {
         const response = await Api.get(`/item`)
-        console.log({ response: response.data })
         setProducts(response.data)
       } catch (error) {
         if (response.status === 401) {
@@ -108,7 +108,14 @@ const ShoppingApp = () => {
           ],
         }}
         positionToolbarAlertBanner="bottom"
-        renderTopToolbarCustomActions={() => (<HeaderComponent titleSize={16} logoSize={42} />)}
+        renderTopToolbarCustomActions={() => {
+          return (
+            <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+              <AccountMenu />
+              <HeaderComponent titleSize={16} logoSize={42} align='flex-start' />
+            </div>
+          )
+        }}
       />
     </>
   );
