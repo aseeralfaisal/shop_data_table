@@ -1,6 +1,7 @@
 require('dotenv').config()
+const jwt = require('jsonwebtoken')
 const bcrypt = require("bcrypt")
-const user = require('../model/user.model')
+const admin = require('../model/adminuser.model')
 const auth = require('./auth.controller')
 
 const saltRounds = process.env.SALT_ROUND
@@ -10,7 +11,7 @@ const createUser = async (req, res) => {
         const { email, name, password } = req.body
         const salt = await bcrypt.genSalt(+saltRounds)
         const hashPass = await bcrypt.hash(password, salt)
-        const createUser = await user.create({
+        const createUser = await admin.create({
             email,
             name,
             password: hashPass
@@ -24,7 +25,7 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body
-        const userFound = await user.findOne({ email })
+        const userFound = await admin.findOne({ email })
         if (userFound) {
             const compare = await bcrypt.compare(password, userFound.password)
             if (!compare) res.json({ message: 'Wrong email or password' })
@@ -39,17 +40,7 @@ const loginUser = async (req, res) => {
     }
 }
 
-const deleteUser = async (req, res) => {
-    const { name } = req.body
-    const userFound = await user.findOne({ name })
-    if (userFound) {
-        userFound.deleteOne()
-    }
-    res.send(userFound)
-}
-
 module.exports = {
     createUser,
     loginUser,
-    deleteUser
 }
