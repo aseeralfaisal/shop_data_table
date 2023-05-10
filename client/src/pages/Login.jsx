@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Grid, Link, Paper, Box } from '@mui/material'
+import { Button, Grid, Link, Paper, Box, ButtonGroup, colors } from '@mui/material'
 import useStyles from "./styles/login.styles";
 import IconTextField from '../components/IconTextField'
 import HeaderComponent from '../components/Header'
 import Cookies from 'js-cookie'
 import Api from '../services/Api.interceptor'
+import { ChangeCircle } from '@mui/icons-material';
 
 const Login = () => {
     const classes = useStyles()
@@ -46,6 +47,18 @@ const Login = () => {
                 >
                     <Box className={classes.paper}>
                         <HeaderComponent />
+                        <Button
+                            fullWidth
+                            variant='contained'
+                            startIcon={<ChangeCircle />}
+                            sx={{
+                                backgroundColor: colors.grey[100], color: colors.grey[800], mt: 5, boxShadow: 0,
+                                '&:hover': { backgroundColor: colors.grey[200], boxShadow: 0 }
+                            }}
+                            onClick={() => setIsAdmin(!isAdmin)}
+                        >
+                            {isAdmin ? 'Sign in as Admin' : 'Sign in as User'}
+                        </Button>
                         <form className={classes.form}>
                             <IconTextField label="Email" type='email' value={emailValue}
                                 setValue={setEmailValue} width={400} />
@@ -56,7 +69,7 @@ const Login = () => {
                                 fullWidth
                                 variant="contained"
                                 color="info"
-                                sx={{ backgroundColor: "#333" }}
+                                sx={{ backgroundColor: colors.grey[800] }}
                                 className={classes.submit}
                                 onClick={(e) => {
                                     e.preventDefault();

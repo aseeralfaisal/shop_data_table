@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -20,10 +20,10 @@ const style = {
 export default function ModalForm({ isModalOpen, setIsModalOpen, itemView }) {
 
     const handleClose = () => setIsModalOpen(false)
-    const [itemValue, setItemValue] = React.useState('')
-    const [nameValue, setNameValue] = React.useState('')
-    const [emailValue, setEmailValue] = React.useState('')
-    const [passValue, setPassValue] = React.useState('')
+    const [itemValue, setItemValue] = useState('')
+    const [nameValue, setNameValue] = useState('')
+    const [emailValue, setEmailValue] = useState('')
+    const [passValue, setPassValue] = useState('')
 
     const handleSubmission = () => {
         if (itemView) {
