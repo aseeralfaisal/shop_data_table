@@ -1,6 +1,6 @@
 import { ShoppingCartCheckoutRounded } from "@mui/icons-material"
 import { Typography } from "@mui/material"
-import * as colors from "@mui/material/colors"
+import { colors } from "@mui/material"
 
 const HeaderComponent = ({ logoSize = 60, titleSize = 24, align = "center" }) => (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: align }}>
