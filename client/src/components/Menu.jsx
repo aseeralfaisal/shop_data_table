@@ -1,12 +1,22 @@
 import { useState } from 'react'
 import { Logout, Menu as MenuIcon } from '@mui/icons-material'
 import { Box, Menu, Tooltip, IconButton, MenuItem, ListItemIcon } from '@mui/material'
+import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom'
 
 export default function AccountMenu() {
+    const navigate = useNavigate()
+
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
+    
     const handleClick = (event) => setAnchorEl(event.currentTarget)
-    const handleClose = () => setAnchorEl(null)
+    const handleClose = () => {
+        Cookies.remove('accessToken')
+        Cookies.remove('refreshToken')
+        navigate('/')
+        setAnchorEl(null)
+    }
 
     return (
         <>
