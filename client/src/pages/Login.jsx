@@ -19,14 +19,22 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await Api.post(`/loginuser`, {
-                email: emailValue,
-                password: passValue
-            })
+            let response = null
+            if (isAdmin) {
+                response = await Api.post(`/loginadmin`, {
+                    email: emailValue,
+                    password: passValue
+                })
+            } else {
+                response = await Api.post(`/loginuser`, {
+                    email: emailValue,
+                    password: passValue
+                })
+            }
             const { accessToken, refreshToken } = response.data
             Cookies.set('accessToken', accessToken)
             Cookies.set('refreshToken', refreshToken)
-            navigate('/home')
+            isAdmin ? navigate('/admin') : navigate('/home')
         } catch (error) {
             console.error(error);
         }
@@ -55,7 +63,7 @@ const Login = () => {
                                 backgroundColor: colors.grey[100], color: colors.grey[800], mt: 5, boxShadow: 0,
                                 '&:hover': { backgroundColor: colors.grey[200], boxShadow: 0 }
                             }}
-                            onClick={() => setIsAdmin(!isAdmin)}
+                            onClick={changeUserType}
                         >
                             {isAdmin ? 'Sign in as Admin' : 'Sign in as User'}
                         </Button>
