@@ -22,7 +22,7 @@ const DataTable = (props) => {
 
     return (
         <>
-            <ModalForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+            <ModalForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} itemView={itemView} />
             <MaterialReactTable
                 columns={columns}
                 data={products}
