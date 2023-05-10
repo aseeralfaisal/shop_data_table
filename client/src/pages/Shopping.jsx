@@ -51,7 +51,7 @@ const ShoppingApp = () => {
     <>
       <DataTable
         columns={columns}
-        products={products}
+        items={products}
       />
     </>
   );

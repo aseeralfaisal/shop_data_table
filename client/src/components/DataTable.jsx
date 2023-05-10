@@ -8,8 +8,7 @@ import ModalForm from './ModalForm'
 
 
 const DataTable = (props) => {
-    const { columns, products, pageSize = 10, isAdmin = false } = props
-    const [itemView, setItemView] = useState(true)
+    const { columns, items, pageSize = 10, isAdmin = false, dataUpdated, setDataUpdated,itemView, setItemView } = props
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const changeAdminView = () => setItemView(!itemView)
@@ -23,10 +22,13 @@ const DataTable = (props) => {
             <ModalForm
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
-                itemView={itemView} />
+                itemView={itemView}
+                dataUpdated={dataUpdated}
+                setDataUpdated={setDataUpdated}
+            />
             <MaterialReactTable
                 columns={columns}
-                data={products}
+                data={items}
                 enableColumnFilterModes
                 enableGrouping
                 enableRowSelection

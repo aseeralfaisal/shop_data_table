@@ -12,6 +12,7 @@ export default function AccountMenu() {
     
     const handleClick = (event) => setAnchorEl(event.currentTarget)
     const handleClose = () => {
+        Cookies.remove('userName')
         Cookies.remove('accessToken')
         Cookies.remove('refreshToken')
         navigate('/')

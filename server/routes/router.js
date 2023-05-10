@@ -12,6 +12,7 @@ router.post('/createadmin', admin.createAdmin)
 router.post('/loginadmin', admin.loginAdmin)
 
 router.get('/', authenticateToken, (_, res) => res.status(200).send('Hello World'))
+router.get('/getusers', authenticateToken, user.getUsers)
 router.get('/item', authenticateToken, item.getItem)
 router.post('/createitem', item.createItem)
 

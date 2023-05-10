@@ -25,16 +25,20 @@ const Login = () => {
                     email: emailValue,
                     password: passValue
                 })
+                const { accessToken, refreshToken, username } = response.data
+                Cookies.set('accessToken', accessToken)
+                Cookies.set('refreshToken', refreshToken)
+                Cookies.set('userName', username)
+                navigate('/admin')
             } else {
                 response = await Api.post(`/loginuser`, {
                     email: emailValue,
                     password: passValue
                 })
+                Cookies.set('accessToken', response.data.accessToken)
+                Cookies.set('refreshToken', response.data.refreshToken)
+                navigate('/home')
             }
-            const { accessToken, refreshToken } = response.data
-            Cookies.set('accessToken', accessToken)
-            Cookies.set('refreshToken', refreshToken)
-            isAdmin ? navigate('/admin') : navigate('/home')
         } catch (error) {
             console.error(error);
         }

@@ -39,6 +39,11 @@ const loginUser = async (req, res) => {
     }
 }
 
+const getUsers = async (req, res) => {
+    const users = await user.find()
+    res.json(users)
+}
+
 const deleteUser = async (req, res) => {
     const { name } = req.body
     const userFound = await user.findOne({ name })
@@ -51,5 +56,6 @@ const deleteUser = async (req, res) => {
 module.exports = {
     createUser,
     loginUser,
+    getUsers,
     deleteUser
 }

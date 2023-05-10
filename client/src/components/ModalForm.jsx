@@ -4,6 +4,8 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import IconTextField from './IconTextField';
 import { Button, ButtonGroup, Grid, colors } from '@mui/material';
+import Api from '../services/Api.interceptor';
+import Cookies from 'js-cookie';
 
 const style = {
     position: 'absolute',
@@ -17,7 +19,7 @@ const style = {
     p: 4,
 };
 
-export default function ModalForm({ isModalOpen, setIsModalOpen, itemView }) {
+export default function ModalForm({ isModalOpen, setIsModalOpen, itemView, dataUpdated, setDataUpdated }) {
 
     const handleClose = () => setIsModalOpen(false)
     const [itemValue, setItemValue] = useState('')
@@ -25,11 +27,33 @@ export default function ModalForm({ isModalOpen, setIsModalOpen, itemView }) {
     const [emailValue, setEmailValue] = useState('')
     const [passValue, setPassValue] = useState('')
 
-    const handleSubmission = () => {
-        if (itemView) {
-            return
+    const handleSubmission = async () => {
+        try {
+            const createdBy = Cookies.get('userName')
+            if (itemView) {
+                const response = await Api.post('/createitem', {
+                    name: itemValue,
+                    created_by: createdBy
+                })
+                if (response.status === 200) {
+                    setDataUpdated(!dataUpdated)
+                    setIsModalOpen(false)
+                }
+            } else {
+                const response = await Api.post('/createuser', {
+                    name: itemValue,
+                    email: emailValue,
+                    password: passValue,
+                    created_by: createdBy
+                })
+                if (response.status === 200) {
+                    setDataUpdated(!dataUpdated)
+                    setIsModalOpen(false)
+                }
+            }
+        } catch (error) {
+            console.log(error.response)
         }
-        return
     }
 
     return (
