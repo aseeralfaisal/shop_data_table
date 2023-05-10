@@ -3,7 +3,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import { Password, Person, ShoppingCart } from '@mui/icons-material'
-import { Button, Container, Typography } from '@mui/material'
+import { Button, ButtonGroup, Container, Typography } from '@mui/material'
 import IconTextField from '../components/IconTextField'
 
 const baseURI = import.meta.env.VITE_BASE_URI
@@ -20,6 +20,9 @@ const Login = () => {
     const navigate = useNavigate()
     const [emailValue, setEmailValue] = useState('')
     const [passValue, setPassValue] = useState('')
+    const [isAdmin, setIsAdmin] = useState(false)
+
+    const changeUserType = () => setIsAdmin(!isAdmin)
 
     const loginAction = async () => {
         try {
@@ -42,6 +45,10 @@ const Login = () => {
         <>
             <Container sx={{ display: 'grid', gap: 3, justifyContent: 'center', margin: '50px auto' }}>
                 <HeaderComponent />
+                <ButtonGroup fullWidth>
+                    <Button onClick={changeUserType} variant={isAdmin ? 'contained' : 'outlined'}>Admin</Button>
+                    <Button onClick={changeUserType} variant={isAdmin ? 'outlined' : 'contained'}>User</Button>
+                </ButtonGroup>
                 <IconTextField label="Email" type='email' value={emailValue}
                     setValue={setEmailValue} icon={<Person />} width={500} />
                 <IconTextField label="Password" type='password' value={passValue}

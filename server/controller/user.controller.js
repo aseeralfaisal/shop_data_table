@@ -34,8 +34,6 @@ const loginUser = async (req, res) => {
         }
         const accessToken = auth.generateAccessToken(email)
         const refreshToken = auth.generateRefreshToken(email)
-        res.cookie('accessToken', accessToken, { httpOnly: true });
-        res.cookie('refreshToken', refreshToken, { httpOnly: true });
         res.json({ accessToken, refreshToken })
     } catch (error) {
         console.log(error)

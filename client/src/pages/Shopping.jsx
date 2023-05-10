@@ -5,10 +5,12 @@ import { Box, Typography } from '@mui/material';
 import { ShoppingCart, Tune } from '@mui/icons-material';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const baseURI = import.meta.env.VITE_BASE_URI
 
 const ShoppingApp = () => {
+  const navigate = useNavigate()
   const [products, setProducts] = useState([])
 
   useEffect(() => {
@@ -20,6 +22,7 @@ const ShoppingApp = () => {
           token
         })
         const newAccessToken = response.data.accessToken
+        console.log({ newAccessToken })
         Cookies.set('accessToken', newAccessToken)
       } catch (error) {
         console.log('Failed to refresh access token', error)
@@ -37,13 +40,10 @@ const ShoppingApp = () => {
         })
         setProducts(response.data)
       } catch ({ response }) {
-        if (response.status === 403) {
+        if (response.status === 401) {
           await refreshAccessToken()
-          const newAccessToken = Cookies.get('accessToken')
-          newAccessToken && await getItems()
-        } else {
-          console.log('API call failed', response)
         }
+        navigate('/')
       }
     }
 
