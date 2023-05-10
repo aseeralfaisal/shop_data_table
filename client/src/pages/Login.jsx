@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Grid, Link, Paper, Box } from '@mui/material'
-import useStyles from "./login.styles";
+import useStyles from "./styles/login.styles";
 import IconTextField from '../components/IconTextField'
 import HeaderComponent from '../components/Header'
 import Cookies from 'js-cookie'

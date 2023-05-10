@@ -1,13 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import '../App.css'
-import MaterialReactTable from 'material-react-table'
 import { Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import HeaderComponent from '../components/Header'
 import Api from '../services/Api.interceptor'
-import AccountMenu from '../components/Menu'
-
-const pageSize = 10
+import DataTable from '../components/DataTable'
 
 const ShoppingApp = () => {
   const navigate = useNavigate()
@@ -25,13 +21,8 @@ const ShoppingApp = () => {
         }
       }
     }
-
     getItems()
   }, [])
-
-  const globalSearch = (row, id, filterValue) => {
-    return row.getValue(id).toLowerCase().startsWith(filterValue.toLowerCase())
-  }
 
   const columns = useMemo(() => [
     {
@@ -45,77 +36,22 @@ const ShoppingApp = () => {
       enableClickToCopy: true,
       header: 'Name',
       size: 150,
-      Cell: ({ renderedCellValue }) => (<Box component='span'>{renderedCellValue}</Box>),
+      Cell: ({ renderedCellValue }) => <Box component='span'>{renderedCellValue}</Box>
     },
     {
       accessorKey: 'created_by',
       enableClickToCopy: true,
       header: 'Created By',
       size: 150,
-      Cell: ({ renderedCellValue }) => (<Box component='span'>{renderedCellValue}</Box>)
+      Cell: ({ renderedCellValue }) => <Box component='span'>{renderedCellValue}</Box>
     },
   ], []);
 
   return (
     <>
-      <MaterialReactTable
+      <DataTable
         columns={columns}
-        data={products}
-        enableColumnFilterModes
-        enableGrouping
-        enableRowSelection
-        enableFullScreenToggle={false}
-        enableDensityToggle={false}
-        enableSelectAll={false}
-        filterFns={{ globalSearch }}
-        enableStickyHeader
-        enableStickyFooter
-        globalFilterFn="globalSearch"
-        muiTablePaginationProps={{
-          rowsPerPageOptions: [pageSize, 15]
-        }}
-        muiTableHeadCellProps={{
-          sx: ({ palette }) => ({
-            fontWeight: 600,
-            fontSize: 16,
-            color: palette.text.primary
-          }),
-        }}
-        muiTableBodyCellProps={{
-          sx: ({ palette }) => ({
-            fontWeight: 600,
-            fontSize: 14,
-            color: palette.text.primary,
-
-          }),
-        }}
-        muiTableBodyProps={{
-          sx: ({ palette }) => ({
-            '& tr:nth-of-type(odd)': {
-              backgroundColor: palette.grey[50],
-            },
-          }),
-        }}
-        initialState={{
-          showColumnFilters: true,
-          pagination: { pageSize: pageSize },
-          columnOrder: [
-            'mrt-row-select',
-            'id',
-            'name',
-            'created_by',
-            // 'mrt-row-actions',
-          ],
-        }}
-        positionToolbarAlertBanner="bottom"
-        renderTopToolbarCustomActions={() => {
-          return (
-            <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-              <AccountMenu />
-              <HeaderComponent titleSize={16} logoSize={42} align='flex-start' />
-            </div>
-          )
-        }}
+        products={products}
       />
     </>
   );
