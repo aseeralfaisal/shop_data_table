@@ -24,6 +24,10 @@ const Login = () => {
                 response = await Api.post(`/loginadmin`, {
                     email: emailValue,
                     password: passValue
+                }, {
+                    headers: {
+                        "x-user-role": 'admin'
+                    }
                 })
             } else {
                 response = await Api.post(`/loginuser`, {

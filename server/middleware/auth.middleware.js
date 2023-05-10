@@ -17,4 +17,15 @@ const authenticateToken = async (req, res, next) => {
     }
 }
 
-module.exports = authenticateToken
+const verfyAdmin = (req, res, next) => {
+    try {
+        const userRole = req.headers['x-user-role']
+        if (userRole === 'admin') {
+            next()
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports = { authenticateToken, verfyAdmin }
