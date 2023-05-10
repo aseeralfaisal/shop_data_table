@@ -80,13 +80,21 @@ const DataTable = (props) => {
                 initialState={{
                     showColumnFilters: true,
                     pagination: { pageSize: pageSize },
-                    columnOrder: [
-                        'mrt-row-select',
-                        'mrt-row-numbers',
-                        'name',
-                        'created_by',
-                        'mrt-row-actions',
-                    ]
+                    columnOrder: isAdmin ?
+                        [
+                            'mrt-row-select',
+                            'mrt-row-numbers',
+                            'name',
+                            'created_by',
+                            'mrt-row-actions',
+                        ]
+                        :
+                        [
+                            'mrt-row-select',
+                            'mrt-row-numbers',
+                            'name',
+                            'created_by',
+                        ],
                 }}
                 renderRowActionMenuItems={(val) => {
                     return (
