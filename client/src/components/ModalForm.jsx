@@ -30,6 +30,7 @@ export default function ModalForm({ isModalOpen, setIsModalOpen, itemView, dataU
     const handleSubmission = async () => {
         try {
             const createdBy = Cookies.get('userName')
+            console.log({ createdBy })
             if (itemView) {
                 const response = await Api.post('/createitem', {
                     name: itemValue,
@@ -41,11 +42,13 @@ export default function ModalForm({ isModalOpen, setIsModalOpen, itemView, dataU
                 }
             } else {
                 const response = await Api.post('/createuser', {
-                    name: itemValue,
+                    name: nameValue,
                     email: emailValue,
                     password: passValue,
                     created_by: createdBy
                 })
+                console.log(name, emailValue, passValue, createdBy)
+                console.log(response.data)
                 if (response.status === 200) {
                     setDataUpdated(!dataUpdated)
                     setIsModalOpen(false)

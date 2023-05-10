@@ -7,13 +7,14 @@ const saltRounds = process.env.SALT_ROUND
 
 const createUser = async (req, res) => {
     try {
-        const { email, name, password } = req.body
+        const { email, name, password, created_by } = req.body
         const salt = await bcrypt.genSalt(+saltRounds)
         const hashPass = await bcrypt.hash(password, salt)
         const createUser = await user.create({
             email,
             name,
-            password: hashPass
+            password: hashPass,
+            created_by
         })
         res.json(createUser)
     } catch (error) {
