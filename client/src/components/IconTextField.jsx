@@ -7,7 +7,6 @@ const IconTextField = ({ label, icon = null, width = 500, type = 'text', value, 
         sx={{ width }}
         type={type}
         value={value}
-        autoFocus
         variant='outlined'
         required
         fullWidth

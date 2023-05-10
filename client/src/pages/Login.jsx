@@ -46,7 +46,7 @@ const Login = () => {
                 >
                     <Box className={classes.paper}>
                         <HeaderComponent />
-                        <form className={classes.form} noValidate>
+                        <form className={classes.form}>
                             <IconTextField label="Email" type='email' value={emailValue}
                                 setValue={setEmailValue} width={400} />
                             <IconTextField label="Password" type='password' value={passValue}
