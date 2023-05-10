@@ -34,7 +34,7 @@ const loginAdmin = async (req, res) => {
         }
         const accessToken = auth.generateAccessToken(email)
         const refreshToken = auth.generateRefreshToken(email)
-        res.json({ accessToken, refreshToken, username: userFound.name })
+        res.json({ accessToken, refreshToken, username: userFound.name, role: 'admin' })
     } catch (error) {
         console.log(error)
     }

@@ -18,9 +18,14 @@ const DataTable = (props) => {
         return row.getValue(id).toLowerCase().startsWith(filterValue.toLowerCase())
     }
 
-    const deleteUser = async (name) => {
+    const removeUserOrItem = async (name) => {
         try {
-            const res = await Api.post('/deleteuser', { name })
+            let res = null
+            if (itemView) {
+                res = Api.post('/deleteitem', { name })
+            } else {
+                res = await Api.post('/deleteuser', { name })
+            }
             console.log(res.data)
             setDataUpdated(!dataUpdated)
         } catch (error) {
@@ -101,7 +106,7 @@ const DataTable = (props) => {
                         <div>
                             {isAdmin ?
                                 <>
-                                <MenuItem onClick={() => deleteUser(val.row.original.name)}>
+                                    <MenuItem onClick={() => removeUserOrItem(val.row.original.name)}>
                                         <ListItemIcon>
                                             <DeleteSweep fontSize="small" />
                                         </ListItemIcon>

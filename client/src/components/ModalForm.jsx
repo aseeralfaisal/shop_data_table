@@ -31,7 +31,6 @@ export default function ModalForm({ isModalOpen, setIsModalOpen, itemView, dataU
         try {
             ev.preventDefault()
             const createdBy = Cookies.get('userName')
-            console.log({ createdBy })
             if (itemView) {
                 const response = await Api.post('/createitem', {
                     name: itemValue,
@@ -48,7 +47,6 @@ export default function ModalForm({ isModalOpen, setIsModalOpen, itemView, dataU
                     password: passValue,
                     created_by: createdBy
                 })
-                console.log(response.data)
                 if (response.status === 200) {
                     setDataUpdated(!dataUpdated)
                     setIsModalOpen(false)
