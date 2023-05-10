@@ -2,12 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react'
 import '../App.css'
 import MaterialReactTable from 'material-react-table'
 import { Box } from '@mui/material'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import HeaderComponent from '../components/Header'
 import Api from '../services/interceptor'
 
-const baseURI = import.meta.env.VITE_BASE_URI
 const pageSize = 10
 
 const ShoppingApp = () => {
@@ -20,11 +18,10 @@ const ShoppingApp = () => {
         const response = await Api.get(`/item`)
         setProducts(response.data)
       } catch (error) {
-        // if (response.status === 401) {
-        //   await refreshAccessToken()
-        // }
-        // navigate('/')
-        console.log(error)
+        if (response.status === 401) {
+          console.log(error)
+          navigate('/')
+        }
       }
     }
 

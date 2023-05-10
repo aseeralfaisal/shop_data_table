@@ -4,7 +4,6 @@ const createItem = async (req, res) => {
     try {
         const { name, created_by } = req.body
         const createItem = await item.create({ name, created_by })
-        console.log(createItem)
         res.send(createItem)
     } catch (error) {
         console.log(error)

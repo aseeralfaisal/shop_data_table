@@ -5,7 +5,6 @@ const authenticateToken = async (req, res, next) => {
     try {
         const authHeader = req.headers['authorization']
         const token = authHeader && authHeader.split(' ')[1]
-        console.log("AUTH TOKEN", token)
         if (token) {
             jwt.verify(token, accessTokenSecret)
             next()
