@@ -20,4 +20,8 @@ const handleRefreshToken = (req, res) => {
     }
 }
 
-module.exports = { handleRefreshToken, generateAccessToken, generateRefreshToken }
+module.exports = {
+    handleRefreshToken,
+    generateAccessToken,
+    generateRefreshToken,
+}

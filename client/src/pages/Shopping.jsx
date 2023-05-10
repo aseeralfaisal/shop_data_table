@@ -15,8 +15,7 @@ const ShoppingApp = () => {
         const response = await Api.get(`/item`)
         setProducts(response.data)
       } catch (error) {
-        if (response.status === 401) {
-          console.log(error)
+        if (error.response.status === 401) {
           navigate('/')
         }
       }

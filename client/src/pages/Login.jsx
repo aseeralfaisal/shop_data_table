@@ -29,7 +29,9 @@ const Login = () => {
                 Cookies.set('accessToken', accessToken)
                 Cookies.set('refreshToken', refreshToken)
                 Cookies.set('userName', username)
-                navigate('/admin')
+                if (response.status === 200) {
+                    navigate('/admin')
+                }
             } else {
                 response = await Api.post(`/loginuser`, {
                     email: emailValue,
@@ -37,7 +39,9 @@ const Login = () => {
                 })
                 Cookies.set('accessToken', response.data.accessToken)
                 Cookies.set('refreshToken', response.data.refreshToken)
-                navigate('/home')
+                if (response.status === 200) {
+                    navigate('/home')
+                }
             }
         } catch (error) {
             console.error(error);

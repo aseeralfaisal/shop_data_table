@@ -101,13 +101,7 @@ const DataTable = (props) => {
                         <div>
                             {isAdmin ?
                                 <>
-                                    <MenuItem>
-                                        <ListItemIcon>
-                                            <EditNote fontSize="small" />
-                                        </ListItemIcon>
-                                        Edit
-                                    </MenuItem>
-                                    <MenuItem onClick={() => deleteUser(val.row.original.name)}>
+                                <MenuItem onClick={() => deleteUser(val.row.original.name)}>
                                         <ListItemIcon>
                                             <DeleteSweep fontSize="small" />
                                         </ListItemIcon>
