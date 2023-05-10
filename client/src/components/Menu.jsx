@@ -21,7 +21,7 @@ export default function AccountMenu() {
     return (
         <>
             <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-                <Tooltip title="Account settings">
+                <Tooltip>
                     <IconButton
                         onClick={handleClick}
                         size="large"
@@ -35,7 +35,6 @@ export default function AccountMenu() {
             </Box>
             <Menu
                 anchorEl={anchorEl}
-                id="account-menu"
                 open={open}
                 onClose={handleClose}
                 onClick={handleClose}
