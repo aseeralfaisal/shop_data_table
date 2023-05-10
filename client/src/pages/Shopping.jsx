@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import '../App.css'
 import MaterialReactTable from 'material-react-table';
-import { Box, Typography } from '@mui/material';
-import { ShoppingCart, Tune } from '@mui/icons-material';
+import { Box} from '@mui/material';
+import * as colors from "@mui/material/colors"
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import HeaderComponent from '../components/Header';
 
 const baseURI = import.meta.env.VITE_BASE_URI
+const pageSize = 10
 
 const ShoppingApp = () => {
   const navigate = useNavigate()
@@ -56,27 +58,24 @@ const ShoppingApp = () => {
 
   const columns = useMemo(() => [
     {
-      id: 'all',
-      columns: [
-        {
-          id: 'id',
-          header: 'ID',
-          accessorKey: 'id',
-          size: 50,
-        },
-        {
-          accessorKey: 'name',
-          enableClickToCopy: true,
-          header: 'Name',
-          size: 150,
-        },
-        {
-          accessorKey: 'created_by',
-          enableClickToCopy: true,
-          header: 'Created By',
-          size: 150,
-        },
-      ],
+      id: 'id',
+      header: 'ID',
+      accessorKey: 'id',
+      size: 50,
+    },
+    {
+      accessorKey: 'name',
+      enableClickToCopy: true,
+      header: 'Name',
+      size: 150,
+      Cell: ({ renderedCellValue }) => (<Box component='span'>{renderedCellValue}</Box>),
+    },
+    {
+      accessorKey: 'created_by',
+      enableClickToCopy: true,
+      header: 'Created By',
+      size: 150,
+      Cell: ({ renderedCellValue }) => (<Box component='span'>{renderedCellValue}</Box>)
     },
   ], []);
 
@@ -86,14 +85,17 @@ const ShoppingApp = () => {
         columns={columns}
         data={products}
         enableColumnFilterModes
+        enableGrouping
         enableRowSelection
         enableFullScreenToggle={false}
         enableDensityToggle={false}
         enableSelectAll={false}
         filterFns={{ globalSearch }}
+        enableStickyHeader
+        enableStickyFooter
         globalFilterFn="globalSearch"
         muiTablePaginationProps={{
-          rowsPerPageOptions: [8, 15]
+          rowsPerPageOptions: [pageSize, 15]
         }}
         muiTableHeadCellProps={{
           sx: ({ palette }) => ({
@@ -112,14 +114,14 @@ const ShoppingApp = () => {
         }}
         muiTableBodyProps={{
           sx: ({ palette }) => ({
-            '& tr:nth-of-type(even)': {
+            '& tr:nth-of-type(odd)': {
               backgroundColor: palette.grey[50],
             },
           }),
         }}
         initialState={{
           showColumnFilters: true,
-          pagination: { pageSize: 8 },
+          pagination: { pageSize: pageSize },
           columnOrder: [
             'mrt-row-select',
             'id',
@@ -129,17 +131,9 @@ const ShoppingApp = () => {
           ],
         }}
         positionToolbarAlertBanner="bottom"
-        renderTopToolbarCustomActions={({ table }) => {
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-              <ShoppingCart sx={{ fontSize: 40, color: "#333" }} />
-              <Typography variant='h3' fontFamily="Poppins"
-                color="#333" fontSize={18} fontWeight={600}>Shopping App</Typography>
-            </Box>
-          )
-        }}
+        renderTopToolbarCustomActions={() => (<HeaderComponent titleSize={16} logoSize={42} />)}
       />
-    </ >
+    </>
   );
 };
 

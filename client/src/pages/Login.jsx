@@ -2,21 +2,15 @@ import { useState } from 'react'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
-import { Password, Person, ShoppingCart } from '@mui/icons-material'
-import { Button, ButtonGroup, Container, Typography } from '@mui/material'
+import { Button, Grid, CssBaseline, Link, Paper } from '@mui/material'
+import useStyles from "./login.styles";
 import IconTextField from '../components/IconTextField'
+import HeaderComponent from '../components/Header'
 
 const baseURI = import.meta.env.VITE_BASE_URI
 
-const HeaderComponent = () => (
-    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <ShoppingCart sx={{ fontSize: 60, color: "#333" }} />
-        <Typography variant='h3' fontFamily="Poppins" fontSize={24}
-            color="#333" fontWeight={600}>Shopping App</Typography>
-    </Container>
-)
-
 const Login = () => {
+    const classes = useStyles()
     const navigate = useNavigate()
     const [emailValue, setEmailValue] = useState('')
     const [passValue, setPassValue] = useState('')
@@ -24,7 +18,7 @@ const Login = () => {
 
     const changeUserType = () => setIsAdmin(!isAdmin)
 
-    const loginAction = async () => {
+    const handleLogin = async () => {
         try {
             const loginUser = await axios.post(`${baseURI}/loginuser`, {
                 email: emailValue,
@@ -43,19 +37,51 @@ const Login = () => {
 
     return (
         <>
-            <Container sx={{ display: 'grid', gap: 3, justifyContent: 'center', margin: '50px auto' }}>
-                <HeaderComponent />
-                <ButtonGroup fullWidth>
-                    <Button onClick={changeUserType} variant={isAdmin ? 'contained' : 'outlined'}>Admin</Button>
-                    <Button onClick={changeUserType} variant={isAdmin ? 'outlined' : 'contained'}>User</Button>
-                </ButtonGroup>
-                <IconTextField label="Email" type='email' value={emailValue}
-                    setValue={setEmailValue} icon={<Person />} width={500} />
-                <IconTextField label="Password" type='password' value={passValue}
-                    setValue={setPassValue} icon={<Password />} width={500} />
-                <Button onClick={loginAction}
-                    variant='contained' sx={{ backgroundColor: "#333" }}>Login</Button>
-            </Container>
+            <Grid container component="main" className={classes.root}>
+                <CssBaseline />
+                <Grid
+                    className={classes.size}
+                    item
+                    xs={12}
+                    sm={8}
+                    md={5}
+                    component={Paper}
+                    elevation={1}
+                    square
+                >
+                    <div className={classes.paper}>
+                        <HeaderComponent />
+                        <form className={classes.form} noValidate>
+                            <IconTextField label="Email" type='email' value={emailValue}
+                                setValue={setEmailValue} width={400} />
+                            <IconTextField label="Password" type='password' value={passValue}
+                                setValue={setPassValue} width={400} />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="info"
+                                sx={{ backgroundColor: "#333" }}
+                                className={classes.submit}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleLogin();
+                                }}
+                            >
+                                Sign In
+                            </Button>
+
+                            <Grid container>
+                                <Grid item>
+                                    <Link href="#" variant="body2" color={"#555"}>
+                                        {"Don't have an account? Sign Up"}
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </div>
+                </Grid>
+            </Grid>
         </>
     )
 }
