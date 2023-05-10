@@ -22,7 +22,7 @@ Api.interceptors.response.use((response) => response,
                     token
                 })
                 const newAccessToken = response.data.accessToken
-                console.log({ newAccessToken })
+                Cookies.set('accessToken', newAccessToken)
             } catch (error) {
                 console.log('Failed to refresh access token', error)
             }
