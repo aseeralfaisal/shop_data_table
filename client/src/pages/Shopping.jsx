@@ -14,7 +14,6 @@ const ShoppingApp = () => {
     const getItems = async () => {
       try {
         const response = await Api.get(`/item`)
-        console.log(response.data)
         setItems(response.data)
       } catch (error) {
         if (error.response.status === 401) {

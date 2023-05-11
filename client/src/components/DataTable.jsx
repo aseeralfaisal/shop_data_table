@@ -44,7 +44,6 @@ const DataTable = (props) => {
                     }
                 })
             }
-            console.log(res.data)
             dispatch(setDataUpdated(!dataUpdated))
         } catch (error) {
             console.log(error)
