@@ -55,9 +55,9 @@ const updateUser = async (req, res) => {
         if (userFound) {
             userFound.name = newname
             userFound.email = newemail
+            const save = await userFound.save()
+            res.json(save)
         }
-        const save = await userFound.save()
-        res.json(save)
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: "Internal Server Error" })

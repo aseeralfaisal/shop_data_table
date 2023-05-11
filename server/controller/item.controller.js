@@ -24,9 +24,9 @@ const updateItem = async (req, res) => {
         const itemFound = await item.findOne({ name })
         if (itemFound) {
             itemFound.name = newname
+            const saveItem = await itemFound.save()
+            res.json(saveItem)
         }
-        const saveItem = await itemFound.save()
-        res.json(saveItem)
     } catch (error) {
         console.log(error)
     }

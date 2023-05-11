@@ -8,7 +8,7 @@ import Cookies from 'js-cookie'
 import Api from '../services/Api.interceptor'
 import { ChangeCircle } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeAdmin } from '../redux/slice';
+import { changeAdmin } from '../redux/slices/UserRoleSlice';
 
 
 const Login = () => {

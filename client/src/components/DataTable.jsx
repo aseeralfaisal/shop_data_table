@@ -6,47 +6,18 @@ import { ButtonGroup, Button, ListItemIcon, MenuItem, colors } from '@mui/materi
 import { Add, AddCircle, ChangeCircle, DeleteSweep, EditNote, FileDownload } from '@mui/icons-material'
 import ModalForm from './ModalForm'
 import Api from '../services/Api.interceptor'
-import { ExportToCsv } from 'export-to-csv'
-
-const ExportButton = ({ table, columns }) => {
-
-    const handleExportRows = (rows) => {
-        csvExporter.generateCsv(rows.map((row) => row.original))
-    }
-    const csvOptions = {
-        fieldSeparator: ',',
-        quoteStrings: '"',
-        decimalSeparator: '.',
-        showLabels: true,
-        useBom: true,
-        useKeysAsHeaders: false,
-        headers: columns.map((c) => c.header),
-    }
-
-    const csvExporter = new ExportToCsv(csvOptions)
-    
-    return (
-        <Button
-            disabled={
-                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-            }
-            sx={{ color: colors.grey[800] }}
-            onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
-            startIcon={<FileDownload />}
-            variant="outlined"
-            size='medium'
-        >
-            Export
-        </Button>
-    )
-}
+import { useDispatch, useSelector } from 'react-redux'
+import { changeFormRole } from '../redux/slices/FormRoleSlice'
+import ExportButton from './ExportButton'
 
 const DataTable = (props) => {
-
+    const dispatch = useDispatch()
     const { columns, items, pageSize = 10, isAdmin = false, dataUpdated, setDataUpdated, itemView, setItemView } = props
 
+    const [itemValue, setItemValue] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isUpdateInfoModal, setIsUpdateInfoModal] = useState(false)
+    const [rowValue, setRowValue] = useState(null)
 
     const changeAdminView = () => setItemView(!itemView)
 
@@ -77,9 +48,18 @@ const DataTable = (props) => {
         }
     }
 
+    const editInfo = async (value) => {
+        setRowValue(value.name)
+        setIsModalOpen(true)
+        dispatch(changeFormRole(true))
+    }
+
     return (
         <>
             <ModalForm
+                rowValue={rowValue}
+                itemValue={itemValue}
+                setItemValue={setItemValue}
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
                 itemView={itemView}
@@ -147,18 +127,18 @@ const DataTable = (props) => {
                             'created_by',
                         ],
                 }}
-                renderRowActionMenuItems={(val) => {
+                renderRowActionMenuItems={({ row }) => {
                     return (
                         <div>
                             {isAdmin ?
                                 <>
-                                    <MenuItem onClick={() => setIsModalOpen(!isModalOpen)}>
+                                    <MenuItem onClick={() => editInfo(row.original)}>
                                         <ListItemIcon>
                                             <EditNote fontSize="small" />
                                         </ListItemIcon>
                                         Edit
                                     </MenuItem>
-                                    <MenuItem onClick={() => removeUserOrItem(val.row.original.name)}>
+                                    <MenuItem onClick={() => removeUserOrItem(row.original.name)}>
                                         <ListItemIcon>
                                             <DeleteSweep fontSize="small" />
                                         </ListItemIcon>

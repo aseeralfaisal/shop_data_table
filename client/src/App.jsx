@@ -8,7 +8,7 @@ import ShoppingApp from './pages/Shopping'
 import Login from './pages/Login'
 import Admin from './pages/Admin'
 import { useSelector, useDispatch } from 'react-redux'
-import { changeUser } from './redux/slice'
+import { changeUser } from './redux/slices/UserRoleSlice'
 
 const App = () => {
     const dispatch = useDispatch()
