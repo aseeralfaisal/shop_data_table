@@ -28,9 +28,9 @@ const Login = () => {
     const RoleTitle = () => {
         let title = null
         if (isAdmin) {
-            isSignUpMode ? title = `Sign up as Admin` : title = `Sign in as Admin`
+            isSignUpMode ? title = `Register as Admin` : title = `Sign in as Admin`
         } else {
-            isSignUpMode ? title = `Sign up as User` : title = `Sign in as User`
+            isSignUpMode ? title = `Register as User` : title = `Sign in as User`
         }
         return title
     }
