@@ -19,9 +19,19 @@ const handleRefreshToken = (req, res) => {
         res.sendStatus(401)
     }
 }
+const validateData = (email, password) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Invalid email format' });
+    }
+    if (password.length < 8) {
+        return res.status(400).json({ message: 'Password should be at least 8 characters long' });
+    }
+}
 
 module.exports = {
     handleRefreshToken,
     generateAccessToken,
     generateRefreshToken,
+    validateData
 }

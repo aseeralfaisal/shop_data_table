@@ -1,18 +1,9 @@
 require('dotenv').config()
 const bcrypt = require("bcrypt")
 const user = require('../model/user.model')
-const auth = require('./auth.controller')
+const { validateData, generateAccessToken, generateRefreshToken } = require('./auth.controller')
 
 const saltRounds = process.env.SALT_ROUND
-const validateData = (email, password) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-        return res.status(400).json({ message: 'Invalid email format' });
-    }
-    if (password.length < 8) {
-        return res.status(400).json({ message: 'Password should be at least 8 characters long' });
-    }
-}
 
 const createUser = async (req, res) => {
     try {
@@ -48,8 +39,8 @@ const loginUser = async (req, res) => {
         } else {
             res.json({ message: 'User Doesn\'t Exist' })
         }
-        const accessToken = auth.generateAccessToken(email)
-        const refreshToken = auth.generateRefreshToken(email)
+        const accessToken = generateAccessToken(email)
+        const refreshToken = generateRefreshToken(email)
         return res.status(200).json({ accessToken, refreshToken, username: userFound.name })
     } catch (error) {
         console.log(error)
