@@ -8,7 +8,23 @@ import ModalForm from './ModalForm'
 import Api from '../services/Api.interceptor'
 import { ExportToCsv } from 'export-to-csv'
 
-const ExportButton = ({ table }) => {
+const ExportButton = ({ table, columns }) => {
+
+    const handleExportRows = (rows) => {
+        csvExporter.generateCsv(rows.map((row) => row.original))
+    }
+    const csvOptions = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalSeparator: '.',
+        showLabels: true,
+        useBom: true,
+        useKeysAsHeaders: false,
+        headers: columns.map((c) => c.header),
+    }
+
+    const csvExporter = new ExportToCsv(csvOptions)
+    
     return (
         <Button
             disabled={
@@ -24,29 +40,18 @@ const ExportButton = ({ table }) => {
         </Button>
     )
 }
+
 const DataTable = (props) => {
+
     const { columns, items, pageSize = 10, isAdmin = false, dataUpdated, setDataUpdated, itemView, setItemView } = props
+
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isUpdateInfoModal, setIsUpdateInfoModal] = useState(false)
 
     const changeAdminView = () => setItemView(!itemView)
 
     const globalSearch = (row, id, filterValue) => {
         return row.getValue(id).toLowerCase().startsWith(filterValue.toLowerCase())
-    }
-
-
-    const csvOptions = {
-        fieldSeparator: ',',
-        quoteStrings: '"',
-        decimalSeparator: '.',
-        showLabels: true,
-        useBom: true,
-        useKeysAsHeaders: false,
-        headers: columns.map((c) => c.header),
-    }
-    const csvExporter = new ExportToCsv(csvOptions)
-    const handleExportRows = (rows) => {
-        csvExporter.generateCsv(rows.map((row) => row.original))
     }
 
     const removeUserOrItem = async (name) => {
@@ -78,6 +83,8 @@ const DataTable = (props) => {
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
                 itemView={itemView}
+                isUpdateInfoModal={isUpdateInfoModal}
+                setIsUpdateInfoModal={setIsUpdateInfoModal}
                 dataUpdated={dataUpdated}
                 setDataUpdated={setDataUpdated}
             />
@@ -145,6 +152,12 @@ const DataTable = (props) => {
                         <div>
                             {isAdmin ?
                                 <>
+                                    <MenuItem onClick={() => setIsModalOpen(!isModalOpen)}>
+                                        <ListItemIcon>
+                                            <EditNote fontSize="small" />
+                                        </ListItemIcon>
+                                        Edit
+                                    </MenuItem>
                                     <MenuItem onClick={() => removeUserOrItem(val.row.original.name)}>
                                         <ListItemIcon>
                                             <DeleteSweep fontSize="small" />
@@ -186,12 +199,12 @@ const DataTable = (props) => {
                                     >
                                         {itemView ? 'Add Item' : 'Add Users'}
                                     </Button>
-                                    <ExportButton table={table} />
+                                    <ExportButton table={table} columns={columns} />
                                 </div>
                                 :
                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 20 }}>
                                     <HeaderComponent titleSize={16} logoSize={42} align='flex-start' />
-                                    <ExportButton table={table} />
+                                    <ExportButton table={table} columns={columns} />
                                 </div>
                             }
                         </div>
