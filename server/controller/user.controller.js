@@ -8,8 +8,13 @@ const saltRounds = process.env.SALT_ROUND
 const createUser = async (req, res) => {
     try {
         const { email, name, password, created_by } = req.body
+        const userExists = await user.findOne({ email })
+        if (userExists) {
+            return res.status(409).json({ message: 'User already exist' })
+        }
         const salt = await bcrypt.genSalt(+saltRounds)
         const hashPass = await bcrypt.hash(password, salt)
+        console.log({ name })
         const createUser = await user.create({
             email,
             name,
@@ -34,7 +39,7 @@ const loginUser = async (req, res) => {
         }
         const accessToken = auth.generateAccessToken(email)
         const refreshToken = auth.generateRefreshToken(email)
-        res.json({ accessToken, refreshToken, username: userFound.name })
+        return res.status(200).json({ accessToken, refreshToken, username: userFound.name })
     } catch (error) {
         console.log(error)
     }

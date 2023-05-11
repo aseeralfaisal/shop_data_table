@@ -35,9 +35,14 @@ export default function ModalForm({ isModalOpen, setIsModalOpen, itemView, dataU
                 const response = await Api.post('/createitem', {
                     name: itemValue,
                     created_by: createdBy
+                }, {
+                    headers: {
+                        "x-user-role": 'admin'
+                    }
                 })
                 if (response.status === 200) {
                     setDataUpdated(!dataUpdated)
+                    setItemValue('')
                     setIsModalOpen(false)
                 }
             } else {
@@ -49,11 +54,14 @@ export default function ModalForm({ isModalOpen, setIsModalOpen, itemView, dataU
                 })
                 if (response.status === 200) {
                     setDataUpdated(!dataUpdated)
+                    setEmailValue('')
+                    setNameValue('')
+                    setPassValue('')
                     setIsModalOpen(false)
                 }
             }
         } catch (error) {
-            console.log(error.response)
+            console.log(error)
         }
     }
 

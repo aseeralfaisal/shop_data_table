@@ -8,12 +8,11 @@ import Cookies from 'js-cookie'
 import Api from '../services/Api.interceptor'
 import { ChangeCircle } from '@mui/icons-material';
 
-const Login = () => {
+const Login = ({ isAdmin, setIsAdmin }) => {
     const classes = useStyles()
     const navigate = useNavigate()
     const [emailValue, setEmailValue] = useState('')
     const [passValue, setPassValue] = useState('')
-    const [isAdmin, setIsAdmin] = useState(false)
 
     const changeUserType = () => setIsAdmin(!isAdmin)
 
@@ -35,12 +34,12 @@ const Login = () => {
                     password: passValue
                 })
             }
-            const { accessToken, refreshToken, username, role } = response.data
+            const { accessToken, refreshToken, username } = response.data
             Cookies.set('accessToken', accessToken)
             Cookies.set('refreshToken', refreshToken)
             Cookies.set('userName', username)
             if (response.status === 200) {
-                if (role === 'admin') {
+                if (isAdmin) {
                     navigate('/admin')
                 } else {
                     navigate('/home')

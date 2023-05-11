@@ -22,9 +22,17 @@ const DataTable = (props) => {
         try {
             let res = null
             if (itemView) {
-                res = Api.post('/deleteitem', { name })
+                res = Api.post('/deleteitem', { name }, {
+                    headers: {
+                        "x-user-role": 'admin'
+                    }
+                })
             } else {
-                res = await Api.post('/deleteuser', { name })
+                res = await Api.post('/deleteuser', { name }, {
+                    headers: {
+                        "x-user-role": 'admin'
+                    }
+                })
             }
             console.log(res.data)
             setDataUpdated(!dataUpdated)
