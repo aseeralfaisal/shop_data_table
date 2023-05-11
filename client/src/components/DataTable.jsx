@@ -8,7 +8,6 @@ import ModalForm from './ModalForm'
 import Api from '../services/Api.interceptor'
 import { ExportToCsv } from 'export-to-csv'
 
-
 const ExportButton = ({ table }) => {
     return (
         <Button
