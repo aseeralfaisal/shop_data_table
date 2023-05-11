@@ -117,7 +117,7 @@ export default function ModalForm(props) {
                     <div style={{ display: 'grid', gap: 10 }}>
                         {formWillUpdate ?
                             <h3 style={{ color: colors.grey[800] }}>
-                                {itemView ? 'Update Item' : 'Update User'}
+                                {itemView ? 'Update Item Name' : 'Update User'}
                             </h3>
                             :
                             <h3 style={{ color: colors.grey[800] }}>
@@ -127,7 +127,7 @@ export default function ModalForm(props) {
                         <form>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                 {itemView ?
-                                    <IconTextField label="Item"
+                                    <IconTextField label="Item Name"
                                         value={itemValue} setValue={setItemValue} type='text' width="100%" />
                                     :
                                     <div style={{ display: 'grid', gap: 10 }}>
