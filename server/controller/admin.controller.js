@@ -34,7 +34,6 @@ const loginAdmin = async (req, res) => {
         const userFound = await admin.findOne({ email })
         if (userFound) {
             const compare = await bcrypt.compare(password, userFound.password)
-            console.log({ compare })
             if (!compare) res.json({ message: 'Wrong email or password' })
         } else {
             res.json({ message: 'User Doesn\'t Exist' })

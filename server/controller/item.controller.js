@@ -1,49 +1,58 @@
-const item = require('../model/item.model')
+const Item = require('../model/item.model')
 
 const createItem = async (req, res) => {
-    try {
-        const { name, created_by } = req.body
-        const createItem = await item.create({ name, created_by })
-        res.send(createItem)
-    } catch (error) {
-        console.log(error)
-    }
+  try {
+    const { name, created_by } = req.body
+    const newItem = await Item.create({ name, created_by })
+    res.json(newItem)
+  } catch (error) {
+    console.error(error)
+    res.sendStatus(500)
+  }
 }
 
 const getItem = async (req, res) => {
-    try {
-        const items = await item.find()
-        res.json(items)
-    } catch (error) {
-        console.log(error)
-    }
+  try {
+    const items = await Item.find()
+    res.json(items)
+  } catch (error) {
+    console.error(error)
+    res.sendStatus(500)
+  }
 }
+
 const updateItem = async (req, res) => {
-    try {
-        const { name, newname } = req.body
-        const itemFound = await item.findOne({ name })
-        if (itemFound) {
-            itemFound.name = newname
-            const saveItem = await itemFound.save()
-            res.json(saveItem)
-        }
-    } catch (error) {
-        console.log(error)
+  try {
+    const { name, newname } = req.body
+    const itemFound = await Item.findOne({ name })
+    if (itemFound) {
+      itemFound.name = newname
+      const updatedItem = await itemFound.save()
+      res.json(updatedItem)
     }
+  } catch (error) {
+    console.error(error)
+    res.sendStatus(500)
+  }
 }
 
 const deleteItem = async (req, res) => {
+  try {
     const { name } = req.body
-    const itemFound = await item.findOne({ name })
+    const itemFound = await Item.findOne({ name })
     if (itemFound) {
-        itemFound.deleteOne()
+      await itemFound.deleteOne()
     }
     res.json(itemFound)
+  } catch (error) {
+    console.error(error)
+    res.sendStatus(500)
+  }
 }
 
 module.exports = {
-    createItem,
-    getItem,
-    updateItem,
-    deleteItem
+  createItem,
+  getItem,
+  updateItem,
+  deleteItem
 }
