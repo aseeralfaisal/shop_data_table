@@ -47,6 +47,24 @@ const loginUser = async (req, res) => {
     }
 }
 
+const updateUser = async (req, res) => {
+    try {
+        const { name, newname, newemail } = req.body
+        const userFound = await user.findOne({ name })
+        if (!userFound) return res.json({ message: "User not found" })
+        if (userFound) {
+            userFound.name = newname
+            userFound.email = newemail
+        }
+        const save = await userFound.save()
+        res.json(save)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+}
+
+
 const getUsers = async (req, res) => {
     const users = await user.find()
     res.json(users)
@@ -65,5 +83,6 @@ module.exports = {
     createUser,
     loginUser,
     getUsers,
+    updateUser,
     deleteUser
 }

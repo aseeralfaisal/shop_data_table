@@ -18,6 +18,19 @@ const getItem = async (req, res) => {
         console.log(error)
     }
 }
+const updateItem = async (req, res) => {
+    try {
+        const { name, newname } = req.body
+        const itemFound = await item.findOne({ name })
+        if (itemFound) {
+            itemFound.name = newname
+        }
+        const saveItem = await itemFound.save()
+        res.json(saveItem)
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 const deleteItem = async (req, res) => {
     const { name } = req.body
@@ -31,5 +44,6 @@ const deleteItem = async (req, res) => {
 module.exports = {
     createItem,
     getItem,
+    updateItem,
     deleteItem
 }
