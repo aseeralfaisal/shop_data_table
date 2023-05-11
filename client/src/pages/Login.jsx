@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Grid, Link, Paper, Box, ButtonGroup, colors } from '@mui/material'
+import { Button, Grid, Link, Paper, Box, Alert, colors } from '@mui/material'
 import useStyles from "./styles/login.styles";
 import IconTextField from '../components/IconTextField'
 import HeaderComponent from '../components/Header'
@@ -13,44 +13,46 @@ const Login = ({ isAdmin, setIsAdmin }) => {
     const navigate = useNavigate()
     const [emailValue, setEmailValue] = useState('')
     const [passValue, setPassValue] = useState('')
+    const [errorMsg, setErrorMsg] = useState('')
 
     const changeUserType = () => setIsAdmin(!isAdmin)
 
     const handleLogin = async () => {
         try {
-            let response = null
-            if (isAdmin) {
-                response = await Api.post(`/loginadmin`, {
-                    email: emailValue,
-                    password: passValue
-                }, {
-                    headers: {
-                        "x-user-role": 'admin'
-                    }
-                })
-            } else {
-                response = await Api.post(`/loginuser`, {
-                    email: emailValue,
-                    password: passValue
-                })
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailValue)) {
+                setErrorMsg('Invalid email format');
+                return
             }
-            const { accessToken, refreshToken, username } = response.data
-            Cookies.set('accessToken', accessToken)
-            Cookies.set('refreshToken', refreshToken)
-            Cookies.set('userName', username)
+
+            if (passValue.length < 8) {
+                setErrorMsg('Password should be at least 8 characters long');
+                return
+            }
+
+            const endpoint = isAdmin ? '/loginadmin' : '/loginuser';
+            const headers = isAdmin ? { "x-user-role": 'admin' } : {};
+
+            const response = await Api.post(endpoint, {
+                email: emailValue,
+                password: passValue
+            }, { headers });
+
+            const { accessToken, refreshToken, username } = response.data;
+            Cookies.set('accessToken', accessToken);
+            Cookies.set('refreshToken', refreshToken);
+            Cookies.set('userName', username);
+
             if (response.status === 200) {
-                if (isAdmin) {
-                    navigate('/admin')
-                } else {
-                    navigate('/home')
-                }
+                navigate(isAdmin ? '/admin' : '/home');
             } else {
-                navigate('/')
+                navigate('/');
             }
         } catch (error) {
             console.error(error);
         }
     };
+
 
     return (
         <>
@@ -84,6 +86,7 @@ const Login = ({ isAdmin, setIsAdmin }) => {
                                 setValue={setEmailValue} width={400} />
                             <IconTextField label="Password" type='password' value={passValue}
                                 setValue={setPassValue} width={400} />
+                            {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
                             <Button
                                 type="submit"
                                 fullWidth

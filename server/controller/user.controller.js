@@ -4,10 +4,20 @@ const user = require('../model/user.model')
 const auth = require('./auth.controller')
 
 const saltRounds = process.env.SALT_ROUND
+const validateData = (email, password) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Invalid email format' });
+    }
+    if (password.length < 8) {
+        return res.status(400).json({ message: 'Password should be at least 8 characters long' });
+    }
+}
 
 const createUser = async (req, res) => {
     try {
         const { email, name, password, created_by } = req.body
+        validateData(email, password)
         const userExists = await user.findOne({ email })
         if (userExists) {
             return res.status(409).json({ message: 'User already exist' })
@@ -30,6 +40,7 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body
+        validateData(email, password)
         const userFound = await user.findOne({ email })
         if (userFound) {
             const compare = await bcrypt.compare(password, userFound.password)
