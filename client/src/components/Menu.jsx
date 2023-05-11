@@ -15,6 +15,8 @@ export default function AccountMenu() {
         Cookies.remove('userName')
         Cookies.remove('accessToken')
         Cookies.remove('refreshToken')
+        Cookies.remove('isAdmin')
+        Cookies.remove('isUser')
         navigate('/')
         setAnchorEl(null)
     }

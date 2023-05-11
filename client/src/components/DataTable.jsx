@@ -3,11 +3,28 @@ import MaterialReactTable from 'material-react-table'
 import HeaderComponent from '../components/Header'
 import AccountMenu from '../components/Menu'
 import { ButtonGroup, Button, ListItemIcon, MenuItem, colors } from '@mui/material'
-import { Add, AddCircle, ChangeCircle, DeleteSweep, EditNote } from '@mui/icons-material'
+import { Add, AddCircle, ChangeCircle, DeleteSweep, EditNote, FileDownload } from '@mui/icons-material'
 import ModalForm from './ModalForm'
 import Api from '../services/Api.interceptor'
+import { ExportToCsv } from 'export-to-csv'
 
 
+const ExportButton = ({ table }) => {
+    return (
+        <Button
+            disabled={
+                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+            }
+            sx={{ color: colors.grey[800] }}
+            onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+            startIcon={<FileDownload />}
+            variant="outlined"
+            size='medium'
+        >
+            Export
+        </Button>
+    )
+}
 const DataTable = (props) => {
     const { columns, items, pageSize = 10, isAdmin = false, dataUpdated, setDataUpdated, itemView, setItemView } = props
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -16,6 +33,21 @@ const DataTable = (props) => {
 
     const globalSearch = (row, id, filterValue) => {
         return row.getValue(id).toLowerCase().startsWith(filterValue.toLowerCase())
+    }
+
+
+    const csvOptions = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalSeparator: '.',
+        showLabels: true,
+        useBom: true,
+        useKeysAsHeaders: false,
+        headers: columns.map((c) => c.header),
+    }
+    const csvExporter = new ExportToCsv(csvOptions)
+    const handleExportRows = (rows) => {
+        csvExporter.generateCsv(rows.map((row) => row.original))
     }
 
     const removeUserOrItem = async (name) => {
@@ -60,7 +92,7 @@ const DataTable = (props) => {
                 enableRowSelection
                 enableFullScreenToggle={false}
                 enableDensityToggle={false}
-                enableSelectAll={false}
+                enableSelectAll
                 filterFns={{ globalSearch }}
                 enableStickyHeader
                 enableStickyFooter
@@ -125,7 +157,7 @@ const DataTable = (props) => {
                     )
                 }}
                 positionToolbarAlertBanner="bottom"
-                renderTopToolbarCustomActions={() => {
+                renderTopToolbarCustomActions={({ table }) => {
                     return (
                         <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
                             <AccountMenu />
@@ -155,9 +187,13 @@ const DataTable = (props) => {
                                     >
                                         {itemView ? 'Add Item' : 'Add Users'}
                                     </Button>
+                                    <ExportButton table={table} />
                                 </div>
                                 :
-                                <HeaderComponent titleSize={16} logoSize={42} align='flex-start' />
+                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 20 }}>
+                                    <HeaderComponent titleSize={16} logoSize={42} align='flex-start' />
+                                    <ExportButton table={table} />
+                                </div>
                             }
                         </div>
                     )
