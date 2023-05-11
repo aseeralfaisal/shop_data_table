@@ -34,7 +34,7 @@ const loginUser = async (req, res) => {
         validateData(email, password)
         const userFound = await user.findOne({ email })
         if (userFound) {
-            const compare = await bcrypt.compare(password, userFound.password)
+            const compare = bcrypt.compare(password, userFound.password)
             if (!compare) res.json({ message: 'Wrong email or password' })
         } else {
             res.json({ message: 'User Doesn\'t Exist' })
