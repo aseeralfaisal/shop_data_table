@@ -1,89 +1,89 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Button, Grid, Link, Paper, Box, Alert, colors } from '@mui/material'
-import useStyles from "./styles/login.styles";
+import { Button, Grid, Link, Paper, Box, Alert, colors, Typography } from '@mui/material'
+import { ChangeCircle } from '@mui/icons-material'
+import useStyles from './styles/login.styles'
 import IconTextField from '../components/IconTextField'
 import HeaderComponent from '../components/Header'
 import Cookies from 'js-cookie'
 import Api from '../services/Api.interceptor'
-import { ChangeCircle } from '@mui/icons-material';
-import { useDispatch, useSelector } from 'react-redux';
-import { changeAdmin } from '../redux/slices/UserRoleSlice';
-
+import { setIsAdminRole } from '../redux/slice'
 
 const Login = () => {
-    const classes = useStyles()
+    const dispatch = useDispatch()
     const navigate = useNavigate()
+    const classes = useStyles()
+
     const [emailValue, setEmailValue] = useState('')
     const [nameValue, setNameValue] = useState('')
     const [passValue, setPassValue] = useState('')
     const [errorMsg, setErrorMsg] = useState('')
     const [isSignUpMode, setIsSignUpMode] = useState(false)
-    const dispatch = useDispatch()
-    const isAdmin = useSelector(state => state.userRole.isAdmin)
 
-    const changeRole = () => dispatch(changeAdmin(!isAdmin))
-    const changeSignUpMode = () => setIsSignUpMode(!isSignUpMode)
+    const isAdminRole = useSelector(state => state.slice.isAdminRole)
+
+    const toggleUserRole = () => dispatch(setIsAdminRole(!isAdminRole))
+    const toggleSignUpMode = () => setIsSignUpMode(!isSignUpMode)
 
     const RoleTitle = () => {
         let title = null
-        if (isAdmin) {
-            isSignUpMode ? title = `Register as Admin` : title = `Sign in as Admin`
+        if (isAdminRole) {
+            isSignUpMode ? title = 'Register as Admin' : title = 'Sign in as Admin'
         } else {
-            isSignUpMode ? title = `Register as User` : title = `Sign in as User`
+            isSignUpMode ? title = 'Register as User' : title = 'Sign in as User'
         }
-        return title
+        return <Typography component='span'>{title}</Typography>
     }
 
     const validator = () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(emailValue)) {
-            setErrorMsg('Invalid email format');
+            setErrorMsg('Invalid email format')
             return
         }
 
         if (passValue.length < 8) {
-            setErrorMsg('Password should be at least 8 characters long');
+            setErrorMsg('Password should be at least 8 characters long')
             return
         }
     }
+    
     const handleLogin = async () => {
         try {
             validator()
-            const endpoint = isAdmin ? '/loginadmin' : '/loginuser';
-            const headers = isAdmin ? { "x-user-role": 'admin' } : {};
+            const endpoint = isAdminRole ? '/loginadmin' : '/loginuser'
+            const headers = isAdminRole ? { "x-user-role": 'admin' } : {}
 
             const response = await Api.post(endpoint, {
                 email: emailValue,
                 password: passValue
             }, { headers });
 
-            const { accessToken, refreshToken, username } = response.data;
+            const { accessToken, refreshToken, username } = response.data
             Cookies.set('accessToken', accessToken)
             Cookies.set('refreshToken', refreshToken)
             Cookies.set('userName', username)
-            
+
             if (response.status === 200) {
-                if (isAdmin) {
-                    dispatch(changeAdmin(true))
+                if (isAdminRole) {
                     navigate('/admin')
                 } else {
-                    dispatch(changeAdmin(false))
                     navigate('/home')
                 }
             } else {
-                navigate('/');
+                navigate('/')
             }
         } catch (error) {
             console.error(error)
             navigate('/')
         }
-    };
+    }
 
     const handleRegister = async () => {
         try {
             validator()
-            const endpoint = isAdmin ? '/createadmin' : '/createuser';
+            const endpoint = isAdminRole ? '/createadmin' : '/createuser'
             const response = await Api.post(endpoint, {
                 email: emailValue,
                 name: nameValue,
@@ -97,7 +97,7 @@ const Login = () => {
             console.error(error)
             navigate('/')
         }
-    };
+    }
 
 
     return (
@@ -123,7 +123,7 @@ const Login = () => {
                                 backgroundColor: colors.grey[100], color: colors.grey[800], mt: 5, boxShadow: 0,
                                 '&:hover': { backgroundColor: colors.grey[200], boxShadow: 0 }
                             }}
-                            onClick={changeRole}
+                            onClick={toggleUserRole}
                         >
                             <RoleTitle />
                         </Button>
@@ -162,7 +162,7 @@ const Login = () => {
                             </Button>
                             <Grid container>
                                 <Grid item>
-                                    <Link onClick={changeSignUpMode} variant="body2" color={"#555"} sx={{ cursor: 'pointer' }}>
+                                    <Link onClick={toggleSignUpMode} variant="body2" color={"#555"} sx={{ cursor: 'pointer' }}>
                                         {isSignUpMode ? "Already have an account? Sign in" : "Don't have an account? Register"}
                                     </Link>
                                 </Grid>

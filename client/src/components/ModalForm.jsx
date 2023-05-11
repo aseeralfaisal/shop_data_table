@@ -1,43 +1,31 @@
-import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import IconTextField from './IconTextField';
-import { Button, ButtonGroup, colors } from '@mui/material';
-import Api from '../services/Api.interceptor';
-import Cookies from 'js-cookie';
-import { useDispatch, useSelector } from 'react-redux';
-import { changeFormRole } from '../redux/slices/FormRoleSlice';
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import IconTextField from './IconTextField'
+import { Button, ButtonGroup, colors, Typography, Modal, Box } from '@mui/material'
+import Api from '../services/Api.interceptor'
+import Cookies from 'js-cookie'
+import { setIsFormUpdateMode } from '../redux/slice'
+import { setDataUpdated } from '../redux/slice'
 
 export default function ModalForm(props) {
     const dispatch = useDispatch()
-    const { itemValue, setItemValue, rowValue, isModalOpen, setIsModalOpen, itemView, dataUpdated, setDataUpdated } = props
+    const { itemValue, setItemValue, rowValue, isModalOpen, setIsModalOpen, itemView } = props
+
+    const dataUpdated = useSelector((state) => state.slice.dataUpdated)
 
     const onModalClose = () => {
         setIsModalOpen(false)
-        dispatch(changeFormRole(false))
+        dispatch(setIsFormUpdateMode(false))
     }
     const [nameValue, setNameValue] = useState('')
     const [emailValue, setEmailValue] = useState('')
     const [passValue, setPassValue] = useState('')
-    const formWillUpdate = useSelector(state => state.formRole.formWillUpdate)
+    const isFormUpdateMode = useSelector(state => state.slice.isFormUpdateMode)
 
-    const handleUpdateExisting = async (ev) => {
+    const handleUpdateExisting = async (event) => {
         try {
-            ev.preventDefault()
-            if(itemValue){
+            event.preventDefault()
+            if (itemValue) {
                 const res = await Api.post('/updateitem', {
                     name: rowValue,
                     newname: itemValue
@@ -45,8 +33,8 @@ export default function ModalForm(props) {
                 if (res.status === 200) {
                     setIsModalOpen(!isModalOpen)
                     setItemValue('')
-                    setDataUpdated(!dataUpdated)
-                    dispatch(changeFormRole(false))
+                    dispatch(setDataUpdated(!dataUpdated))
+                    dispatch(setIsFormUpdateMode(false))
                 }
             } else {
                 const res = await Api.post('/updateuser', {
@@ -58,8 +46,8 @@ export default function ModalForm(props) {
                     setIsModalOpen(!isModalOpen)
                     setNameValue('')
                     setEmailValue('')
-                    setDataUpdated(!dataUpdated)
-                    dispatch(changeFormRole(false))
+                    dispatch(setDataUpdated(!dataUpdated))
+                    dispatch(setIsFormUpdateMode(false))
                 }
             }
         } catch (error) {
@@ -67,9 +55,9 @@ export default function ModalForm(props) {
         }
     }
 
-    const handleNewSubmit = async (ev) => {
+    const handleNewSubmit = async (event) => {
         try {
-            ev.preventDefault()
+            event.preventDefault()
             const createdBy = Cookies.get('userName')
             if (itemView) {
                 const response = await Api.post('/createitem', {
@@ -81,7 +69,7 @@ export default function ModalForm(props) {
                     }
                 })
                 if (response.status === 200) {
-                    setDataUpdated(!dataUpdated)
+                    dispatch(setDataUpdated(!dataUpdated))
                     setItemValue('')
                     setIsModalOpen(false)
                 }
@@ -93,7 +81,7 @@ export default function ModalForm(props) {
                     created_by: createdBy
                 })
                 if (response.status === 200) {
-                    setDataUpdated(!dataUpdated)
+                    dispatch(setDataUpdated(!dataUpdated))
                     setEmailValue('')
                     setNameValue('')
                     setPassValue('')
@@ -113,9 +101,19 @@ export default function ModalForm(props) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={style}>
+                <Box sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 400,
+                    bgcolor: 'background.paper',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    p: 4,
+                }}>
                     <div style={{ display: 'grid', gap: 10 }}>
-                        {formWillUpdate ?
+                        {isFormUpdateMode ?
                             <h3 style={{ color: colors.grey[800] }}>
                                 {itemView ? 'Update Item Name' : 'Update User'}
                             </h3>
@@ -139,17 +137,17 @@ export default function ModalForm(props) {
                                 }
                             </Typography>
                             <ButtonGroup fullWidth sx={{ display: 'flex', gap: 0.3, mt: 3 }}>
-                                {formWillUpdate ?
+                                {isFormUpdateMode ?
                                     <Button size='medium'
                                         type='submit'
-                                        onClick={(ev) => handleUpdateExisting(ev)}
+                                        onClick={(event) => handleUpdateExisting(event)}
                                         sx={{ background: colors.grey[800] }} variant='contained'>
                                         {itemView ? 'Update Item' : 'Update User'}
                                     </Button>
                                     :
                                     <Button size='medium'
                                         type='submit'
-                                        onClick={(ev) => handleNewSubmit(ev)}
+                                        onClick={(event) => handleNewSubmit(event)}
                                         sx={{ background: colors.grey[800] }} variant='contained'>
                                         {itemView ? 'Add Item' : 'Add User'}
                                     </Button>

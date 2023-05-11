@@ -1,18 +1,21 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { ButtonGroup, Button, ListItemIcon, MenuItem, colors } from '@mui/material'
+import { AddCircle, ChangeCircle, DeleteSweep, EditNote } from '@mui/icons-material'
 import MaterialReactTable from 'material-react-table'
 import HeaderComponent from '../components/Header'
 import AccountMenu from '../components/Menu'
-import { ButtonGroup, Button, ListItemIcon, MenuItem, colors } from '@mui/material'
-import { Add, AddCircle, ChangeCircle, DeleteSweep, EditNote, FileDownload } from '@mui/icons-material'
 import ModalForm from './ModalForm'
-import Api from '../services/Api.interceptor'
-import { useDispatch, useSelector } from 'react-redux'
-import { changeFormRole } from '../redux/slices/FormRoleSlice'
 import ExportButton from './ExportButton'
+import Api from '../services/Api.interceptor'
+import { setIsFormUpdateMode } from '../redux/slice'
+import { setDataUpdated } from '../redux/slice'
 
 const DataTable = (props) => {
+    const { columns, items, pageSize = 10, isAdminRole = false, itemView, setItemView } = props
+
     const dispatch = useDispatch()
-    const { columns, items, pageSize = 10, isAdmin = false, dataUpdated, setDataUpdated, itemView, setItemView } = props
+    const dataUpdated = useSelector(state => state.slice.dataUpdated)
 
     const [itemValue, setItemValue] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -42,7 +45,7 @@ const DataTable = (props) => {
                 })
             }
             console.log(res.data)
-            setDataUpdated(!dataUpdated)
+            dispatch(setDataUpdated(!dataUpdated))
         } catch (error) {
             console.log(error)
         }
@@ -51,7 +54,7 @@ const DataTable = (props) => {
     const editInfo = async (value) => {
         setRowValue(value.name)
         setIsModalOpen(true)
-        dispatch(changeFormRole(true))
+        dispatch(setIsFormUpdateMode(true))
     }
 
     return (
@@ -65,8 +68,6 @@ const DataTable = (props) => {
                 itemView={itemView}
                 isUpdateInfoModal={isUpdateInfoModal}
                 setIsUpdateInfoModal={setIsUpdateInfoModal}
-                dataUpdated={dataUpdated}
-                setDataUpdated={setDataUpdated}
             />
             <MaterialReactTable
                 enableRowNumbers
@@ -111,7 +112,7 @@ const DataTable = (props) => {
                 initialState={{
                     showColumnFilters: true,
                     pagination: { pageSize: pageSize },
-                    columnOrder: isAdmin ?
+                    columnOrder: isAdminRole ?
                         [
                             'mrt-row-select',
                             'mrt-row-numbers',
@@ -130,7 +131,7 @@ const DataTable = (props) => {
                 renderRowActionMenuItems={({ row }) => {
                     return (
                         <div>
-                            {isAdmin ?
+                            {isAdminRole ?
                                 <>
                                     <MenuItem onClick={() => editInfo(row.original)}>
                                         <ListItemIcon>
@@ -153,9 +154,9 @@ const DataTable = (props) => {
                     return (
                         <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
                             <AccountMenu />
-                            {isAdmin ?
+                            {isAdminRole ?
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                    <HeaderComponent isAdmin titleSize={16} logoSize={42} align='flex-start' />
+                                    <HeaderComponent isAdminRole titleSize={16} logoSize={42} align='flex-start' />
                                     <ButtonGroup variant="outlined">
                                         <Button
                                             sx={{ color: colors.grey[800] }}

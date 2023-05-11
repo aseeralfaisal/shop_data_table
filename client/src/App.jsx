@@ -1,38 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import {
-    Route,
-    Routes,
-    BrowserRouter
-} from "react-router-dom"
+import { useEffect } from 'react'
+import { Route, Routes, BrowserRouter } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import ShoppingApp from './pages/Shopping'
 import Login from './pages/Login'
 import Admin from './pages/Admin'
-import { useSelector, useDispatch } from 'react-redux'
-import { changeUser } from './redux/slices/UserRoleSlice'
+import { setIsUserRole } from './redux/slice'
 
 const App = () => {
     const dispatch = useDispatch()
-    const isAdmin = useSelector(state => state.userRole.isAdmin)
-    const isUser = useSelector(state => state.userRole.isUser)
-
-    console.log({ isAdmin, isUser })
+    const isAdminRole = useSelector(state => state.slice.isAdminRole)
+    const isUserRole = useSelector(state => state.slice.isUserRole)
 
     useEffect(() => {
-        if (isAdmin) {
-            dispatch(changeUser(false))
+        if (isAdminRole) {
+            dispatch(setIsUserRole(false))
         } else {
-            dispatch(changeUser(true))
+            dispatch(setIsUserRole(true))
         }
-    }, [isAdmin, isUser])
+    }, [isAdminRole, isUserRole])
 
     return (
         <BrowserRouter>
             <Routes>
-                {isAdmin && <Route path="/admin" element={<Admin />} />}
-                {isUser && <Route path="/home" element={<ShoppingApp />} />}
-                <Route path="/" index element={
-                    <Login />
-                } />
+                {isAdminRole && <Route path="/admin" element={<Admin />} />}
+                {isUserRole && <Route path="/home" element={<ShoppingApp />} />}
+                <Route path="/" index element={<Login />} />
             </Routes>
         </BrowserRouter>
     )

@@ -1,16 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
-import '../App.css'
-import { Box } from '@mui/material'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { Box } from '@mui/material'
 import DataTable from '../components/DataTable'
 import Api from '../services/Api.interceptor'
+import '../App.css'
 
 const Admin = () => {
     const navigate = useNavigate()
     const [isItemView, setIsItemView] = useState(true)
     const [items, setItems] = useState([])
     const [users, setUsers] = useState([])
-    const [dataUpdated, setDataUpdated] = useState(false)
+
+    const dataUpdated = useSelector((state) => state.slice.dataUpdated)
 
     useEffect(() => {
         const getItems = async () => {
@@ -49,13 +51,11 @@ const Admin = () => {
     return (
         <>
             <DataTable
-                isAdmin
+                isAdminRole
                 columns={columns}
                 items={isItemView ? items : users}
                 itemView={isItemView}
                 setItemView={setIsItemView}
-                dataUpdated={dataUpdated}
-                setDataUpdated={setDataUpdated}
             />
         </>
     );

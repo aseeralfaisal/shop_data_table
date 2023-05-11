@@ -1,17 +1,15 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { persistReducer, persistStore } from 'redux-persist'
 import thunk from 'redux-thunk'
-import { userRoleSlice } from './slices/UserRoleSlice'
-import { formRoleSlice } from './slices/FormRoleSlice'
 import storage from 'redux-persist/lib/storage'
+import { Slice } from './slice'
 
 const persistConfig = {
   key: 'root',
   storage: storage,
 }
 const reducer = combineReducers({
-  userRole: userRoleSlice.reducer,
-  formRole: formRoleSlice.reducer
+  slice: Slice.reducer,
 })
 const persistedReducer = persistReducer(persistConfig, reducer)
 

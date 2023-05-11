@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import '../App.css'
-import { Box } from '@mui/material'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { Box } from '@mui/material'
 import Api from '../services/Api.interceptor'
 import DataTable from '../components/DataTable'
+import '../App.css'
 
 const ShoppingApp = () => {
   const navigate = useNavigate()
@@ -13,6 +14,7 @@ const ShoppingApp = () => {
     const getItems = async () => {
       try {
         const response = await Api.get(`/item`)
+        console.log(response.data)
         setItems(response.data)
       } catch (error) {
         if (error.response.status === 401) {
@@ -42,10 +44,7 @@ const ShoppingApp = () => {
 
   return (
     <>
-      <DataTable
-        columns={columns}
-        items={items}
-      />
+      <DataTable columns={columns} items={items} />
     </>
   );
 };
