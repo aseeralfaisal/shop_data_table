@@ -7,13 +7,13 @@ import DataTable from '../components/DataTable'
 
 const ShoppingApp = () => {
   const navigate = useNavigate()
-  const [products, setProducts] = useState([])
+  const [items, setItems] = useState([])
 
   useEffect(() => {
     const getItems = async () => {
       try {
         const response = await Api.get(`/item`)
-        setProducts(response.data)
+        setItems(response.data)
       } catch (error) {
         if (error.response.status === 401) {
           navigate('/')
@@ -44,7 +44,7 @@ const ShoppingApp = () => {
     <>
       <DataTable
         columns={columns}
-        items={products}
+        items={items}
       />
     </>
   );

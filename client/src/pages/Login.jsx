@@ -8,7 +8,7 @@ import Cookies from 'js-cookie'
 import Api from '../services/Api.interceptor'
 import { ChangeCircle } from '@mui/icons-material';
 
-const Login = ({ isAdmin, setIsAdmin }) => {
+const Login = ({ isAdmin, setIsAdmin, isUser, setIsUser }) => {
     const classes = useStyles()
     const navigate = useNavigate()
     const [emailValue, setEmailValue] = useState('')
@@ -44,12 +44,21 @@ const Login = ({ isAdmin, setIsAdmin }) => {
             Cookies.set('userName', username);
 
             if (response.status === 200) {
-                navigate(isAdmin ? '/admin' : '/home');
+                if (isAdmin) {
+                    setIsAdmin(true)
+                    setIsUser(false)
+                    navigate('/admin')
+                } else {
+                    setIsAdmin(false)
+                    setIsUser(true)
+                    navigate('/home')
+                }
             } else {
                 navigate('/');
             }
         } catch (error) {
-            console.error(error);
+            console.error(error)
+            navigate('/')
         }
     };
 

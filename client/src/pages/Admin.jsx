@@ -20,7 +20,6 @@ const Admin = () => {
                 const userResponse = await Api.get('/getusers')
                 setUsers(userResponse.data)
             } catch (error) {
-                console.log(error)
                 if (error.response.status === 401) {
                     navigate('/')
                 }
