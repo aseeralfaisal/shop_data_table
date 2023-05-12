@@ -25,7 +25,9 @@ const DataTable = (props) => {
     const changeAdminView = () => setItemView(!itemView)
 
     const globalSearch = (row, id, filterValue) => {
-        return row.getValue(id).toLowerCase().startsWith(filterValue.toLowerCase())
+        const rowValue = row.getValue(id)
+        const rowNum = Number(filterValue) - 1
+        return rowValue.toLowerCase().startsWith(filterValue.toLowerCase()) || row.index === rowNum
     }
 
     const removeUserOrItem = async (name) => {
